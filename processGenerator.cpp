@@ -1,0 +1,144 @@
+#include "clkUtilities.h"
+#include "queueUtilities.h"
+#include <unistd.h>
+#include <bits/stdc++.h>
+#include <iostream>
+#include <fstream>
+#include <string>
+#include <cctype>
+using namespace std;
+
+
+vector<processData>v;
+void ClearResources(int);
+void readData(){
+
+string line;
+int cnt=1;
+  ifstream myfile ("processes.txt");
+  if (myfile.is_open())
+  {
+    while ( getline (myfile,line) )
+    {
+     // printf("%s\n",line.c_str());
+      if(cnt>1)
+       { int y=0;
+         string s="";
+         int id,prior,arr,run;
+	 for(int i=0;i<line.size();i++)
+          { 
+            if(!isspace(line.at(i))){s+=line[i];
+ 		//printf("string %s\n",s.c_str());
+		 //printf("size %d\n",s.size());
+}
+           else  if(s.size()>0&&isspace(line.at(i))){
+                //printf("elembt %s\n",s.c_str()); 
+		int x=atoi( s.c_str() );
+		s.clear();
+              //  printf("elembt %s\n",s.c_str()); 
+                if(y==0)
+                {id=x;}
+ 		else if(y==1){arr=x;}
+		else if(y==2){run=x;}
+                else if(y==3){prior=x;}
+                   y++;
+            }
+          }
+  processData  pdd;
+  pdd.id=id;
+  pdd.arrivalTime=arr;
+  pdd.priority=prior;
+  pdd.runTime=run;
+  v.push_back(pdd);
+
+       }
+    cnt++;
+     
+    }
+    myfile.close();
+  }
+
+  else {printf("Unable to open file\n");} 
+//printf("size %d\n",v.size());
+
+}
+
+int main() {
+    
+    initQueue(true);
+    //TODO: 
+    // 1-Ask the user about the chosen scheduling Algorithm and its parameters if exists.
+      printf("Please choose Algorithm:\n 1- HPf\n 2-RR\n 3-SRTN\n");
+    // 2-Initiate and create Scheduler and Clock processes.
+   int idclk=fork();
+  if(idclk==0)
+	{  
+	execl("./clock.out","./clock.out",  (char*)NULL);
+        perror("execl() failure!\n\n");
+
+           
+	}
+   int idsheduler=fork();
+    if(idsheduler==0)
+		{
+                     execl("./sch.out","./sch.out",  (char*)NULL);
+        	     perror("execl() failure!\n\n");
+		}
+    
+
+    // 3-use this function AFTER creating clock process to initialize clock, and initialize MsgQueue
+    initClk();
+    
+
+    
+    //TODO:  Generation Main Loop
+    //4-Creating a data structure for process  and  provide it with its parameters 
+    //5-Send & Notify the information to  the scheduler at the appropriate time 
+    //(only when a process arrives) so that it will be put it in its turn.
+    readData();
+    sort(v.begin(),v.end());
+
+
+
+    //===================================
+    //Preimplemented Functions examples
+
+    /////Toget time use the following function
+	/**for(int i=0;i<v.size();i++)
+	{   printf("arrivetime %d\n",v[i].arrivalTime);
+	}*/
+	while(v.size()>0)
+	{       int x= getClk();
+		//printf("current time is %d\n",x);
+		int i=0;
+		while(i<v.size())
+		{  if(v[i].arrivalTime==x)
+		   { struct processData pD=v[i];
+			Sendmsg(pD);
+			v.erase (v.begin()+i,v.begin()+i+1);
+	           }
+			else i++;
+		//printf("size %d\n",v.size());
+		}
+
+		//////Tosend something to the scheduler, for example send id 2
+		//returns -1 on failure;
+	} 
+    //no more processes, send end of transmission message
+    lastSend();
+    //////////To clear all resources
+    ClearResources(0);
+    //======================================
+    
+}
+
+void ClearResources(int)
+{
+    msgctl(qid, IPC_RMID, (struct msqid_ds*)0);
+    destroyClk(true); 
+    exit(0);
+}
+
+
+
+
