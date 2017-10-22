@@ -1,8 +1,10 @@
 build: 
-	g++ clk.cpp -o clock.out
-	g++ scheduler.cpp -o sch.out
-	g++ FilesGenerator.cpp -o Files.out
-	g++ processGenerator.cpp -o main.out
+	g++ -std=c++11 clk.cpp -o clock.out
+	g++ -std=c++11 scheduler.cpp -o sch.out
+	g++ -std=c++11 FilesGenerator.cpp -o Files.out
+	g++ -std=c++11 processGenerator.cpp -o main.out
+	g++ -std=c++11 process.cpp -o process.out
+              
 
 clean:
 	rm -f *.out  processes.txt

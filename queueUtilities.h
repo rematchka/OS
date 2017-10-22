@@ -22,15 +22,20 @@ struct processData {
    //TODO: add the process data details
    int id;
    int arrivalTime;
-   int state;
+   int state;   //0 ready
+                //1 resumed
+                //2 stopped
+                //3 finished
+                //4 running
    int runTime;
    int startOfExecution;
    int finishTime;
    int priority;
    int execution;
-   int  stopTime;
+   int stopTime;
    int workTime;
-bool operator < (const processData&  pd) const { return arrivalTime<pd.arrivalTime; }
+   int pid;
+bool operator < (const processData&  pd) const { return priority>pd.priority; }
    
 	
 };

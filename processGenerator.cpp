@@ -6,6 +6,13 @@
 #include <fstream>
 #include <string>
 #include <cctype>
+#include <stdio.h>
+#include <sys/wait.h>
+#include<stdlib.h>
+#include <unistd.h>
+#include <stdio.h>
+#include <sys/wait.h>
+#include<stdlib.h>
 using namespace std;
 
 
@@ -17,49 +24,32 @@ string line;
 int cnt=1;
   ifstream myfile ("processes.txt");
   if (myfile.is_open())
-  {
-    while ( getline (myfile,line) )
-    {
-     // printf("%s\n",line.c_str());
-      if(cnt>1)
-       { int y=0;
-         string s="";
-         int id,prior,arr,run;
-	 for(int i=0;i<line.size();i++)
-          { 
-            if(!isspace(line.at(i))){s+=line[i];
- 		//printf("string %s\n",s.c_str());
-		 //printf("size %d\n",s.size());
-}
-           else  if(s.size()>0&&isspace(line.at(i))){
-                //printf("elembt %s\n",s.c_str()); 
-		int x=atoi( s.c_str() );
-		s.clear();
-              //  printf("elembt %s\n",s.c_str()); 
-                if(y==0)
-                {id=x;}
- 		else if(y==1){arr=x;}
-		else if(y==2){run=x;}
-                else if(y==3){prior=x;}
-                   y++;
-            }
-          }
-  processData  pdd;
-  pdd.id=id;
-  pdd.arrivalTime=arr;
-  pdd.priority=prior;
-  pdd.runTime=run;
-  v.push_back(pdd);
+  {   
+   getline (myfile,line) ;
+    
+	      printf("%s\n",line.c_str());
+	    string id,prior,arr,run;
+	     while(myfile>>id>>arr>>run>>prior)
+	 {  //cout<<id<<" " <<" "<<prior<<" "<<arr<<" "<<run<<endl;
+         processData  pdd;
+	 pdd.id=atoi( id.c_str() );
+	pdd.arrivalTime=atoi( arr.c_str() );
+	  pdd.priority=atoi( prior.c_str() );
+	pdd.runTime=atoi( run.c_str() );
+	v.push_back(pdd);
+        }
 
-       }
-    cnt++;
+
+    
      
-    }
+    
     myfile.close();
   }
 
   else {printf("Unable to open file\n");} 
 //printf("size %d\n",v.size());
+
+
 
 }
 
@@ -120,17 +110,25 @@ int main() {
 			else i++;
 		//printf("size %d\n",v.size());
 		}
-
+          sleep(1);
 		//////Tosend something to the scheduler, for example send id 2
 		//returns -1 on failure;
 	} 
     //no more processes, send end of transmission message
     lastSend();
     //////////To clear all resources
-    ClearResources(0);
-    //======================================
-    
+int pid,stat_loc;
+  pid = wait(&stat_loc);
+            if(!(stat_loc & 0x00FF))
+                printf("\nA child with pid %d terminated with exit code %d\n", pid, stat_loc>>8);
+            if(WIFEXITED(stat_loc))
+                printf("\nChild terminated normally with status %d", WEXITSTATUS(stat_loc));
+     ClearResources(0);
 }
+   
+    //======================================
+
+
 
 void ClearResources(int)
 {
