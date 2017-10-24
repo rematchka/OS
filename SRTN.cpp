@@ -74,12 +74,13 @@ class pcb
 class logger 
 {
  FILE * fptr;
+ const char* fname;
 
 public:
 
-    logger(const char* fname)
+    logger(const char* fn1ame)
     {
-         fptr=fopen(fname,"r");
+         fname=fn1ame;
     }
     
     void logProcess(pcb process,int curtime)
@@ -120,18 +121,25 @@ public:
             default:
              break;
          }
+    fptr=fopen(fname,"a");
+         if(fptr!=NULL&&process.state==3)
 
-         if(process.state==3)
-
-        fprintf(fptr, "At time %d process %d %s arr %d total %d remain %d wait %d TA %d WTA %.2f \n",process.executionStart,process.pid,states[process.state],process.arrivalTime,process.runtime,process.remainingTime,wait,ta,wta);
-          else
-             fprintf(fptr, "At time %d process %d %s arr %d total %d remain %d wait %d \n",process.executionStart,process.pid,states[process.state],process.arrivalTime,process.runtime,process.remainingTime,wait);
+     { rewind(fptr);
+  fprintf(fptr, "At time %d process %d %s arr %d total %d remain %d wait %d TA %d WTA %.2f \n",process.executionStart,process.pid,states[process.state],process.arrivalTime,process.runtime,process.remainingTime,wait,ta,wta);
+fclose(fptr);
+}
+          else if(fptr!=NULL)
+          {  rewind(fptr);
+ fprintf(fptr, "At time %d process %d %s arr %d total %d remain %d wait %d \n",process.executionStart,process.pid,states[process.state],process.arrivalTime,process.runtime,process.remainingTime,wait);
+ fclose(fptr);
+}
 
     }
 
     ~logger()
     {
-        fclose(fptr);
+       // fclose(fptr);
+          printf("closed el bta3 el file\n");
     }
 };
 
