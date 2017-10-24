@@ -71,9 +71,11 @@ int main(int argc, char* argv[]) {
 	
 	if(!running_process)
 	{
-	  current_running=pD;
+	           pq.push(pD); 		  
+                   current_running=pq.top();
+                   pq.pop(); 
           
-          int id=fork();
+                  int id=fork();
     if(id==0)
          { 
                  //std::string s = to_string(pD.runTime);
