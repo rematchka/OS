@@ -79,7 +79,7 @@ printf("almost there \n");
           else if(fptr!=NULL)
           {printf("almost there 2\n");
  rewind(fptr);
-  fprintf(fptr, "At time %d process %d %s arr %d total %d remain %d wait %d \n",process.startOfExecution,process.pid,states[process.state],process.arrivalTime,process.runTime,0,wait);
+  fprintf(fptr, "At time %d process %d %s arr %d total %d remain %d wait %d \n",process.startOfExecution,process.pid,states[process.state],process.arrivalTime,process.runTime,abs(process.startOfExecution+process.arrivalTime-curtime),wait);
 printf("almost there 2\n");
  fclose(fptr);
 }
