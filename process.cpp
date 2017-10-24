@@ -30,6 +30,10 @@ int main(int agrc, char* argv[]) {
        remainingtime--;
       printf(" child..... with remaining time%d\n",remainingtime);
     }
+    //printf("parent id%d\n",getppid());
+    kill(getppid(),SIGCONT);
+     //printf("continueing parent\n");
+     
     //if you need to use the emulated clock uncomment the following line
     //destroyClk(false);
     return 0;

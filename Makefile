@@ -4,6 +4,8 @@ build:
 	g++ -std=c++11 FilesGenerator.cpp -o Files.out
 	g++ -std=c++11 processGenerator.cpp -o main.out
 	g++ -std=c++11 process.cpp -o process.out
+	g++ -std=c++11 SRTN.cpp -o SRTN.out
+	
               
 
 clean:

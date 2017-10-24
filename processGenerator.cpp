@@ -30,7 +30,7 @@ int cnt=1;
 	      printf("%s\n",line.c_str());
 	    string id,prior,arr,run;
 	     while(myfile>>id>>arr>>run>>prior)
-	 {  //cout<<id<<" " <<" "<<prior<<" "<<arr<<" "<<run<<endl;
+	 {  cout<<id<<" " <<" "<<arr<<" "<<arr<<" "<<prior<<endl;
          processData  pdd;
 	 pdd.id=atoi( id.c_str() );
 	pdd.arrivalTime=atoi( arr.c_str() );
@@ -93,26 +93,25 @@ int main() {
     //===================================
     //Preimplemented Functions examples
 
-    /////Toget time use the following function
-	/**for(int i=0;i<v.size();i++)
-	{   printf("arrivetime %d\n",v[i].arrivalTime);
-	}*/
+    
 	while(v.size()>0)
 	{       int x= getClk();
-		//printf("current time is %d\n",x);
+		
 		int i=0;
 		while(i<v.size())
 		{  if(v[i].arrivalTime==x)
-		   { struct processData pD=v[i];
+		   {    kill(idsheduler,SIGCONT);
+			 struct processData pD=v[i];
 			Sendmsg(pD);
 			v.erase (v.begin()+i,v.begin()+i+1);
+                        printf("sending data%d\n",pD.id) ;
+                        sleep(2);
 	           }
 			else i++;
-		//printf("size %d\n",v.size());
+		
 		}
-          sleep(1);
-		//////Tosend something to the scheduler, for example send id 2
-		//returns -1 on failure;
+          
+		
 	} 
     //no more processes, send end of transmission message
     lastSend();
