@@ -3,3 +3,4 @@
 1. non-preemptive​ ​ HPF
 2. Shortest​ ​ Remaining​ ​ time​ ​ Next
 3. Round​ ​ Robin
+4. preemptive​ ​ HPF
