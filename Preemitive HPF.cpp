@@ -66,44 +66,77 @@ int main(int argc, char* argv[]) {
      y=Recmsg(pD);
      if(y==0)
 	{ 
-	  printf("current received data %d priority %d\n",pD.id,pD.priority);
-       
+	printf("current received data %d priority %d\n",pD.id,pD.priority);
+       // printf("current received data %d\n",pD.runTime);
 	
-		if(!running_process)
-		{ pq.push(pD); 		  
-                   current_running=pq.top();
-                   pq.pop(); 
-                   printf("push in queue%d\n",current_running.id);		  
-		  int id=fork();
-		    if(id==0)
-			 { 
-				 //std::string s = to_string(pD.runTime);
-					stringstream strs;
-					  strs << current_running.runTime;
-					  string temp_str = strs.str();
-					char const *pchar = temp_str.c_str();
-				    execl("./process.out","./process.out",pchar);
-				     perror("execl() failure!\n\n");    
-			}              
-              
-		 else 
-			{ 
-		            
+	if(!running_process)
+	{
+	  current_running=pD;
+          
+          int id=fork();
+    if(id==0)
+         { 
+                 //std::string s = to_string(pD.runTime);
+			stringstream strs;
+			  strs << current_running.runTime;
+			  string temp_str = strs.str();
+	        	char const *pchar = temp_str.c_str();
+                    execl("./process.out","./process.out",pchar);
+                     perror("execl() failure!\n\n");    
+        } 
 
-			  running_process=true;
-		          
-		            current_running.pid=id;
-		            current_running.state=4;
-		            current_running.startOfExecution=x;
-		            printf("running process child id %d\n",pD.id);
-		         
-		             
-			}	
-	 	 	
-	        }
-	else  
-                  pq.push(pD);printf("waiting in queue\n");
-		
+         else 
+		{ 
+                    
+
+		  running_process=true;
+                  
+                    current_running.pid=id;
+                    current_running.state=4;
+                    current_running.startOfExecution=x;
+                    printf("running process child id %d\n",pD.id);
+                 
+                     
+		}	
+ 	 	
+	}
+	else  {
+                   if(pD.priority<current_running.priority)
+                    {
+                         //do some computation 
+                            printf("Killed process %d\n",current_running.pid); 
+                           kill(current_running.pid,SIGSTOP);
+                           
+                         
+                         current_running.state=2;
+                       
+                         current_running.stopTime=x;
+                        printf("here\n");
+			 	
+                         pq.push(current_running); 
+			 current_running=pD;
+			 running_process=true;
+			 int id=fork();
+                           if(id==0)
+                           {      stringstream strs;
+			  strs << current_running.runTime;
+			  string temp_str = strs.str();
+	        	char const *pchar = temp_str.c_str();
+                    execl("./process.out","./process.out",pchar);
+				     perror("execl() failure!\n\n");    }
+			else 
+				{   
+                                  
+
+
+					current_running.pid=id;
+				    current_running.state=4;
+                                    current_running.startOfExecution=x; 
+				    printf("running child process with id %d\n",pD.id);
+				}
+                    }
+                  else {pq.push(pD);printf("waiting in queue\n");}
+		}
      }
 
     if(!running_process&&!pq.empty())
@@ -111,7 +144,14 @@ int main(int argc, char* argv[]) {
           current_running=pq.top();
           pq.pop(); 
           running_process=true;
-           current_running.state=4;
+          if(current_running.state==2)
+             {  current_running.state=1;
+                current_running.startOfExecution=x;	
+                 printf("continue process %d\n",current_running.id); 
+                kill(current_running.pid,SIGCONT);
+		
+             }
+           else { current_running.state=4;
                  int id=fork();
                     if(id==0)
                         {   stringstream strs;
@@ -128,7 +168,7 @@ int main(int argc, char* argv[]) {
                                      current_running.startOfExecution=x;
                                      printf("running child process with id  %d\n",current_running.id);
 				}
-		
+		}
       }
    sleep(1);
    printf(" clck%d\n",x); 
@@ -142,9 +182,18 @@ int main(int argc, char* argv[]) {
         
        
 	if(!running_process)
-            {     current_running=pq.top();
-                  pq.pop();     
-                 running_process=true;
+            {
+                 current_running=pq.top();
+               pq.pop(); 
+              running_process=true;
+          if(current_running.state==2)
+             {  current_running.state=1;
+                current_running.startOfExecution=x;
+                kill(current_running.pid,SIGCONT);
+                 printf("running child process with id  %d\n",current_running.id);
+                
+             }
+           else { current_running.state=4;
                  int id=fork();
                      if(id==0)
                              {  stringstream strs;
@@ -153,7 +202,7 @@ int main(int argc, char* argv[]) {
 	        	char const *pchar = temp_str.c_str();
                     execl("./process.out","./process.out",pchar);
 				     perror("execl() failure!\n\n");
-		        	 }
+ }
 			else  
 				{  
 				  current_running.pid=id;
@@ -161,7 +210,7 @@ int main(int argc, char* argv[]) {
                                     current_running.startOfExecution=x;
                                     printf("running child process with id  %d\n",current_running.id);
 				}
-		
+		}
             }
      sleep(1);
     } 
