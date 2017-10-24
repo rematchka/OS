@@ -71,7 +71,7 @@ public:
 
       {  
 	rewind(fptr);
- fprintf(fptr, "At time %d process %d %s arr %d total %d remain %d wait %d TA %d WTA %.2f \n",process.startOfExecution,process.pid,states[process.state],process.arrivalTime,process.runTime,0,wait,ta,wta);
+ fprintf(fptr, "At time %d process %d %s arr %d total %d remain %d wait %d TA %d WTA %.2f \n",process.finishTime,process.pid,states[process.state],process.arrivalTime,process.runTime,0,wait,ta,wta);
 
  fclose(fptr);
 printf("almost there \n");
@@ -155,7 +155,7 @@ int main(int argc, char* argv[]) {
   {     int x= getClk();
      y=Recmsg(pD);
      if(y==0)
-	{ 
+	{  x= getClk();
 	  printf("current received data %d priority %d\n",pD.id,pD.priority);
        
 	
@@ -183,8 +183,9 @@ int main(int argc, char* argv[]) {
 			  running_process=true;
 		          
 		            current_running.pid=id;
-		            current_running.state=4;
+		            current_running.state=0;
 		            current_running.startOfExecution=x;
+                            schedulerLogger.logProcess(current_running,getClk());
 		            printf("running process child id %d\n",pD.id);
 		         
 		             
@@ -197,11 +198,11 @@ int main(int argc, char* argv[]) {
      }
 
     if(!running_process&&!pq.empty())
-      {
+      { x= getClk();
           current_running=pq.top();
           pq.pop(); 
           running_process=true;
-           current_running.state=4;
+           current_running.state=0;
                  int id=fork();
                     if(id==0)
                         {   stringstream strs;
@@ -214,8 +215,9 @@ int main(int argc, char* argv[]) {
 				{  
 				  
                             current_running.pid=id;
-				    current_running.state=4;
+				    current_running.state=0;
                                      current_running.startOfExecution=x;
+                                     schedulerLogger.logProcess(current_running,getClk());
                                      printf("running child process with id  %d\n",current_running.id);
 				}
 		
@@ -248,8 +250,9 @@ int main(int argc, char* argv[]) {
 			else  
 				{  
 				  current_running.pid=id;
-				    current_running.state=4;
+				    current_running.state=0;
                                     current_running.startOfExecution=x;
+                                    schedulerLogger.logProcess(current_running,getClk()); 
                                     printf("running child process with id  %d\n",current_running.id);
 				}
 		
