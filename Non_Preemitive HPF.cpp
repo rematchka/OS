@@ -64,7 +64,7 @@ int main(int argc, char* argv[]) {
   while(y<=0)
   {     int x= getClk();
      y=Recmsg(pD);
-     if(y==0)
+     while(y==0)
 	{ 
 	  printf("current received data %d priority %d\n",pD.id,pD.priority);
        
@@ -103,6 +103,7 @@ int main(int argc, char* argv[]) {
 	        }
 	else  
                   pq.push(pD);printf("waiting in queue\n");
+     y=Recmsg(pD);
 		
      }
 
@@ -130,9 +131,11 @@ int main(int argc, char* argv[]) {
 				}
 		
       }
+  if(running_process)kill(current_running.pid,SIGCONT);
    kill(getpid(),SIGSTOP);
    sleep(1);
    printf(" clck%d\n",x); 
+   if(running_process)kill(current_running.pid,SIGSTOP);
    
    }
    //y=Recmsg(pD);

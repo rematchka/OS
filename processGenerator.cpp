@@ -105,7 +105,7 @@ int main() {
 			Sendmsg(pD);
 			v.erase (v.begin()+i,v.begin()+i+1);
                         printf("sending data%d\n",pD.id) ;
-                        sleep(2);
+                      //  sleep(2);
 	           }
 			else i++;
 		
