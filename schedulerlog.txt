@@ -1,10 +1,10 @@
-At time 9 process 15034 started arr 8 total 26 remain 8 wait 1 
-At time 35 process 15034 finished arr 8 total 26 remain 0 wait 0 TA 27 WTA 1.04 
-At time 35 process 15037 started arr 16 total 0 remain 16 wait 19 
-At time 35 process 15037 finished arr 16 total 0 remain 0 wait 0 TA 19 WTA inf 
-At time 35 process 15039 started arr 11 total 16 remain 11 wait 24 
-At time 51 process 15039 finished arr 11 total 16 remain 0 wait 0 TA 40 WTA 2.50 
-At time 51 process 15042 started arr 16 total 24 remain 16 wait 35 
-At time 75 process 15042 finished arr 16 total 24 remain 0 wait 0 TA 59 WTA 2.46 
-At time 75 process 15046 started arr 25 total 11 remain 25 wait 50 
-At time 86 process 15046 finished arr 25 total 11 remain 0 wait 0 TA 61 WTA 5.55 
+At time 9 process 3828 started arr 8 total 26 remain 8 wait 1 
+At time 35 process 3828 finished arr 8 total 26 remain 0 wait 0 TA 27 WTA 1.04 
+At time 35 process 3830 started arr 16 total 0 remain 16 wait 19 
+At time 35 process 3830 finished arr 16 total 0 remain 0 wait 0 TA 19 WTA inf 
+At time 35 process 3832 started arr 11 total 16 remain 11 wait 24 
+At time 51 process 3832 finished arr 11 total 16 remain 0 wait 0 TA 40 WTA 2.50 
+At time 51 process 3835 started arr 16 total 24 remain 16 wait 35 
+At time 75 process 3835 finished arr 16 total 24 remain 0 wait 0 TA 59 WTA 2.46 
+At time 75 process 3837 started arr 25 total 11 remain 25 wait 50 
+At time 86 process 3837 finished arr 25 total 11 remain 0 wait 0 TA 61 WTA 5.55 

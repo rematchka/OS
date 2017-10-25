@@ -153,47 +153,16 @@ int main(int argc, char* argv[]) {
   int y=Recmsg(pD);
   while(y<=0)
   {     int x= getClk();
+      if(running_process){printf("killing my son id %d\n",current_running.id);kill(current_running.pid,SIGSTOP);}
      y=Recmsg(pD);
-     if(y==0)
+      while(y==0)
 	{  x= getClk();
 	  printf("current received data %d priority %d\n",pD.id,pD.priority);
        
 	
-		if(!running_process)
-		{ pq.push(pD); 		  
-                   current_running=pq.top();
-                   pq.pop(); 
-                   printf("push in queue%d\n",current_running.id);		  
-		  int id=fork();
-		    if(id==0)
-			 { 
-				
-					stringstream strs;
-					  strs << current_running.runTime;
-					  string temp_str = strs.str();
-					char const *pchar = temp_str.c_str();
-				    execl("./process.out","./process.out",pchar);
-				     perror("execl() failure!\n\n");    
-			}              
-              
-		 else 
-			{ 
-		            
+	  pq.push(pD);printf("waiting in queue\n");
+	  y=Recmsg(pD);
 
-			  running_process=true;
-		          
-		            current_running.pid=id;
-		            current_running.state=0;
-		            current_running.startOfExecution=x;
-                            schedulerLogger.logProcess(current_running,getClk());
-		            printf("running process child id %d\n",pD.id);
-		         
-		             
-			}	
-	 	 	
-	        }
-	else  
-                  pq.push(pD);printf("waiting in queue\n");
 		
      }
 
@@ -222,9 +191,12 @@ int main(int argc, char* argv[]) {
 				}
 		
       }
+  if(running_process)
+   { printf("Resuming my son id %d\n",current_running.id);kill(current_running.pid,SIGCONT);}
    kill(getpid(),SIGSTOP);
    sleep(1);
    printf(" clck%d\n",x); 
+  
    
    }
    
@@ -258,6 +230,7 @@ int main(int argc, char* argv[]) {
 		
             }
     kill(getpid(),SIGSTOP);
+    
      sleep(1);
 
     } 

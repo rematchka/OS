@@ -71,7 +71,7 @@ int main() {
    int idsheduler=fork();
     if(idsheduler==0)
 		{
-                     execl("./SRTN.out","./SRTN.out",  (char*)NULL);
+                     execl("./sch.out","./sch.out",  (char*)NULL);
         	     perror("execl() failure!\n\n");
 		}
     
@@ -100,7 +100,7 @@ int main() {
 		int i=0;
 		while(i<v.size())
 		{  if(v[i].arrivalTime==x)
-		   {    //kill(idsheduler,SIGCONT);
+		   {    kill(idsheduler,SIGCONT);
 			 struct processData pD=v[i];
 			Sendmsg(pD);
 			v.erase (v.begin()+i,v.begin()+i+1);
