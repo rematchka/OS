@@ -1,0 +1,10 @@
+At time 9 process 3942 started arr 8 total 26 remain 26 wait 1 
+At time 35 process 3942 finished arr 8 total 26 remain 0 wait 0 TA 27 WTA 1.04 
+At time 35 process 3945 started arr 16 total 0 remain 0 wait 19 
+At time 35 process 3945 finished arr 16 total 0 remain 0 wait 0 TA 19 WTA inf 
+At time 35 process 3947 started arr 11 total 16 remain 16 wait 24 
+At time 51 process 3947 finished arr 11 total 16 remain 0 wait 0 TA 40 WTA 2.50 
+At time 51 process 3961 started arr 16 total 24 remain 24 wait 35 
+At time 75 process 3961 finished arr 16 total 24 remain 0 wait 0 TA 59 WTA 2.46 
+At time 75 process 3965 started arr 25 total 11 remain 11 wait 50 
+At time 86 process 3965 finished arr 25 total 11 remain 0 wait 0 TA 61 WTA 5.55 

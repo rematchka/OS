@@ -65,13 +65,13 @@ public:
          }
 
 //printf("hello file name is %s\n",fname);
-
+   int remin=process.runTime-(curtime-process.startOfExecution);
      fptr=fopen(fname,"a");
          if(fptr!=NULL&&process.state==3)
 
       {  
 	rewind(fptr);
- fprintf(fptr, "At time %d process %d %s arr %d total %d remain %d wait %d TA %d WTA %.2f \n",process.finishTime,process.pid,states[process.state],process.arrivalTime,process.runTime,0,wait,ta,wta);
+ fprintf(fptr, "At time %d process %d %s arr %d total %d remain %d wait %d TA %d WTA %.2f \n",process.finishTime,process.pid,states[process.state],process.arrivalTime,process.runTime,remin,wait,ta,wta);
 
  fclose(fptr);
 printf("almost there \n");
@@ -79,7 +79,7 @@ printf("almost there \n");
           else if(fptr!=NULL)
           {printf("almost there 2\n");
  rewind(fptr);
-  fprintf(fptr, "At time %d process %d %s arr %d total %d remain %d wait %d \n",process.startOfExecution,process.pid,states[process.state],process.arrivalTime,process.runTime,abs(process.startOfExecution+process.arrivalTime-curtime),wait);
+  fprintf(fptr, "At time %d process %d %s arr %d total %d remain %d wait %d \n",process.startOfExecution,process.pid,states[process.state],process.arrivalTime,process.runTime,remin,wait);
 printf("almost there 2\n");
  fclose(fptr);
 }
@@ -95,7 +95,7 @@ printf("almost there 2\n");
 };
 
 
-logger schedulerLogger("schedulerlog.txt");
+logger schedulerLogger("HPF.txt");
 struct processData pD;
  bool running_process=false;
     struct processData current_running;
