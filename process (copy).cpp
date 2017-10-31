@@ -14,7 +14,14 @@
 /* Modify this file as needed*/
 int remainingtime =0;
 
-
+void sleepplease(int x)
+{
+  int clll=getClk();
+   int time=clll+x;
+   
+   while(time>getClk()){}
+   printf("clcok in child%d\n",getClk());
+}
 
 int main(int agrc, char* argv[]) {
 
@@ -29,10 +36,12 @@ int main(int agrc, char* argv[]) {
     while(remainingtime>0) {
      
        
-       remainingtime--;
-      printf(" child..... with remaining time%d\n",remainingtime);
+       
+     
    //  printf("clock in child %d\n",getClk());
-    sleep(1);
+    sleepplease(1);
+remainingtime--;
+ printf(" child..... with remaining time%d\n",remainingtime);
     
     }
     //printf("parent id%d\n",getppid());

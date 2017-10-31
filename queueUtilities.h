@@ -34,6 +34,7 @@ struct processData {
    int execution;
    int stopTime;
    int workTime;
+   int laststopTime;
    int pid;
 bool operator < (const processData&  pd) const { return priority>pd.priority; }
    

@@ -8,11 +8,12 @@
 #include <cctype>
 #include <stdio.h>
 #include <sys/wait.h>
-#include<stdlib.h>
+#include <stdlib.h>
 #include <unistd.h>
 #include <stdio.h>
 #include <sys/wait.h>
-#include<stdlib.h>
+#include <stdlib.h>
+#include <vector>
 using namespace std;
 
 
@@ -25,19 +26,28 @@ int cnt=1;
   ifstream myfile ("processes.txt");
   if (myfile.is_open())
   {   
-   getline (myfile,line) ;
+        getline (myfile,line) ;
     
 	      printf("%s\n",line.c_str());
-	    string id,prior,arr,run;
-	     while(myfile>>id>>arr>>run>>prior)
-	 {  cout<<id<<" " <<" "<<arr<<" "<<run<<" "<<prior<<endl;
-         processData  pdd;
-	 pdd.id=atoi( id.c_str() );
-	pdd.arrivalTime=atoi( arr.c_str() );
-	  pdd.priority=atoi( prior.c_str() );
-	pdd.runTime=atoi( run.c_str() );
-	v.push_back(pdd);
-        }
+	      int id,prior,arr,run;
+	
+   while(myfile>>id>>arr>>run>>prior)
+   {     
+
+      cout<<id<<" " <<" "<<arr<<" "<<run<<" "<<prior<<endl;
+      processData  pdd;
+	//  pdd.id=atoi( id.c_str() );
+
+	// pdd.arrivalTime=atoi( arr.c_str() );
+	// pdd.priority=atoi( prior.c_str() );
+	// pdd.runTime=atoi( run.c_str() );
+      pdd.id=id;
+      pdd.arrivalTime=arr;
+      pdd.priority=prior;
+      pdd.runTime=run;
+	    v.push_back(pdd);
+       
+   }
 
 
     
@@ -53,46 +63,26 @@ int cnt=1;
 
 }
 
-
-
 int main() {
     
-    initQueue(true);
+  initQueue(true);
     //TODO: 
     // 1-Ask the user about the chosen scheduling Algorithm and its parameters if exists.
-      printf("Please choose Algorithm:\n 1- HPf\n 2-RR\n 3-SRTN\n");
-     int x;
-  scanf("%d",&x);
+  printf("Please choose Algorithm:\n 1- HPf\n 2-RR\n 3-SRTN\n");
     // 2-Initiate and create Scheduler and Clock processes.
    int idclk=fork();
   if(idclk==0)
 	{  
-	execl("./clock.out","./clock.out",  (char*)NULL);
+	execl("./clock.out",  (char*)NULL);
         perror("execl() failure!\n\n");
 
            
 	}
    int idsheduler=fork();
     if(idsheduler==0)
-		{   if(x==1)//for HPF
-                { execl("./sch.out","./sch.out",  (char*)NULL);
-        	     perror("execl() failure!\n\n");}
-         else if(x==2)
-           {printf("Please enter quantum nunber"); 
-             int quant;
-             scanf("%d",&quant);
-              stringstream strs;
-              strs << quant;
-
-			  string temp_str = strs.str();
-	        	char const *pchar = temp_str.c_str();
-                   execl("./RR.out","./RR.out",  pchar);
+		{
+                execl("./SRTN2.out",  (char*)NULL);
         	     perror("execl() failure!\n\n");
-               }
-   else {
-                      execl("./SRTN2.out","./SRTN2.out");
-        	     perror("execl() failure!\n\n");
-        }
 		}
     
 
@@ -115,18 +105,22 @@ int main() {
 
     
 	while(v.size()>0)
-	{       int x= getClk();
+
+	{  int x= getClk();
 		
+
 		int i=0;
 		while(i<v.size())
 		{  if(v[i].arrivalTime==x)
 		   {    //kill(idsheduler,SIGCONT);
-                       kill(idsheduler,SIGILL);
+        printf("process arrived at time %d and its remaining time is %d \n",v[i].arrivalTime,v[i].runTime);
 			 struct processData pD=v[i];
 			Sendmsg(pD);
+      //Send a signal to the scheduler to receive the sent msg
+                        kill(idsheduler,SIGILL);
 			v.erase (v.begin()+i,v.begin()+i+1);
-                       // printf("sending data%d\n",pD.id) ;
-                      //  sleep(2);
+                        printf("sending data %d\n",pD.id) ;
+                       sleep(1);
 	           }
 			else i++;
 		
@@ -135,7 +129,10 @@ int main() {
 		
 	} 
     //no more processes, send end of transmission message
+    sleep(10);
     lastSend();
+    kill(idsheduler,SIGILL); //last send signal
+    printf("End of transmission\n");
     //////////To clear all resources
 int pid,stat_loc;
   pid = wait(&stat_loc);
