@@ -1,15 +1,18 @@
 #include "clkUtilities.h"
 #include "queueUtilities.h"
 #include <unistd.h>
-#include <bits/stdc++.h>
+//#include <bits/stdc++.h>
 #include <iostream>
 #include <fstream>
 #include <string>
 #include <cctype>
 #include <stdio.h>
 #include <sys/wait.h>
-#include<stdlib.h>
+#include <stdlib.h>
 #include "statistics.h"
+#include <algorithm>
+#include <queue>
+#include <sstream>
 using namespace std;
 
 
@@ -178,14 +181,14 @@ public:
     ~logger()
     {
           fclose(fptr);
-          printf("closed el bta3 el file\n");
+          
     }
 };
 
 
 
-logger schedulerLogger("RR.txt");
-StatisticsReport CPUStatisticsReport("schedulerstatsRR.txt");
+logger schedulerLogger("scheduler.log");
+StatisticsReport CPUStatisticsReport("scheduler.perf");
 struct processData pD;
  queue <pcb> processTable;
 
@@ -330,8 +333,7 @@ int main(int argc, char* argv[]) {
         //   printf("clock in lseep %d\n",getClk());
 	   sleep(quant);
    int y=getClk();
-  //printf("remain time %d\n",quant+prevclk);
-  //printf("clock %d\n",y);
+ 
           if(running_process&&y==quant+prevclk)
             { 
 	        {   kill(runningprocess.pid,SIGTSTP);
@@ -431,7 +433,7 @@ int main(int argc, char* argv[]) {
 
 
  int x= getClk();
- printf("at end clck%d process table size %d\n",x,processTable.size()); 
+ printf("at end clck%d process table size %d\n",x,(int)processTable.size()); 
 
     CPUStatisticsReport.setFinishTime(getClk());
              CPUStatisticsReport.setStarttime(startTime);

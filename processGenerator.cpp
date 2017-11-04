@@ -1,7 +1,7 @@
 #include "clkUtilities.h"
 #include "queueUtilities.h"
 #include <unistd.h>
-#include <bits/stdc++.h>
+//#include <bits/stdc++.h>
 #include <iostream>
 #include <fstream>
 #include <string>
@@ -12,6 +12,9 @@
 #include <unistd.h>
 #include <stdio.h>
 #include <sys/wait.h>
+#include <algorithm>
+#include <vector>
+#include <sstream>
 #include<stdlib.h>
 using namespace std;
 

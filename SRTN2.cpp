@@ -136,7 +136,7 @@ public:
             case 2:
             {
                 //state="stopped";
-                wait=0; //TODO: REVISE THAT CONDITION
+                wait=0; 
                 break;
             }
             case 3:
@@ -150,19 +150,19 @@ public:
             default:
              break;
          }
-       // fptr=fopen(fname,"a");
+       
          if(fptr!=NULL)
          {
             if(process.state==_finished)
 
-               { //rewind(fptr);
+               { 
                  fprintf(fptr, "At time %d process %d %s arr %d total %d remain %d wait %d TA %d WTA %.2f \n",curtime,process.id,states[process.state],process.arrivalTime,process.runtime,process.remainingTime,wait,ta,wta);
-//fclose(fptr);
+
                }
-            else //if(fptr!=NULL)
-            {  //rewind(fptr);
+            else 
+            {  
               fprintf(fptr, "At time %d process %d %s arr %d total %d remain %d wait %d \n",curtime,process.id,states[process.state],process.arrivalTime,process.runtime,process.remainingTime,wait);
- //fclose(fptr);
+ 
             }
         }
         else
@@ -175,7 +175,7 @@ public:
     ~logger()
     {
           fclose(fptr);
-          printf("closed el bta3 el file\n");
+         
     }
 };
 
@@ -195,7 +195,7 @@ struct compare
     }
 };
 
-//Priority queue holdinug all the processes that the should be handled by the scheduler
+//Priority queue holding all the processes that the should be handled by the scheduler
 
  priority_queue <pcb,vector<pcb>,compare> processTable;
 
@@ -210,8 +210,8 @@ int startTime=1000;
 
 queue<processData>tempprocesses;
 
-logger schedulerLogger("schedulerlog.txt");
-StatisticsReport CPUStatisticsReport("schedulerstats.txt");
+logger schedulerLogger("scheduler.log");
+StatisticsReport CPUStatisticsReport("scheduler.perf");
 
 
 void SigIntHandler(int sig)
@@ -427,8 +427,8 @@ int main(int argc, char* argv[]) {
      {
        if(schedulerstate==state_last_message_sent)
        {
-          if(currentprocesscnt==0) //All procecesses have terminated
-           {// printf("stuck here\n");
+          if(currentprocesscnt==0) //All processes have terminated
+           {
              finished=true; //terminate the scheduler as it has finished
              CPUStatisticsReport.setFinishTime(getClk());
              CPUStatisticsReport.setStarttime(startTime);

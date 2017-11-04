@@ -1,13 +1,16 @@
 #include "clkUtilities.h"
 #include "queueUtilities.h"
 #include <unistd.h>
-#include <bits/stdc++.h>
+#include <queue>
+//#include <bits/stdc++.h>
+#include <algorithm>
 #include <iostream>
 #include <fstream>
 #include <string>
 #include <cctype>
 #include <stdio.h>
 #include <sys/wait.h>
+#include <sstream>
 #include<stdlib.h>
 #include "statistics.h"
 using namespace std;
@@ -185,8 +188,8 @@ public:
 
 
 
-logger schedulerLogger("HPF.txt");
-StatisticsReport CPUStatisticsReport("schedulerstatsHPF.txt");
+logger schedulerLogger("scheduler.log");
+StatisticsReport CPUStatisticsReport("scheduler.perf");
 
 struct processData pD;
  priority_queue <pcb> processTable;

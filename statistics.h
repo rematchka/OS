@@ -31,7 +31,7 @@ class StatisticsReport
 
   void calculateCPUutilisation()
   {
-     cpuUtil=((totalrunTime)/double(finishTime-startTime))*100;
+     cpuUtil=((totalrunTime)/double(finishTime))*100;
      cpuUtil=(cpuUtil<=100)?cpuUtil:100;
   }
 
