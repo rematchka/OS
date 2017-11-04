@@ -53,6 +53,7 @@ class pcb
     this->runtime=runtime;
     this->priority=priority;
     this->remainingTime=runtime;
+    laststopTime=0;
    }
    bool operator < (const pcb&  pd) const { return priority>pd.priority; }
    void updatepcb(int newstate,int curtime)

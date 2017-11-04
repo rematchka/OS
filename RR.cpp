@@ -53,6 +53,7 @@ class pcb
     this->runtime=runtime;
     this->priority=priority;
     this->remainingTime=runtime;
+    laststopTime=0;
    }
    bool operator < (const pcb&  pd) const { return priority>pd.priority; }
    void updatepcb(int newstate,int curtime)
@@ -430,7 +431,7 @@ int main(int argc, char* argv[]) {
 
 
  int x= getClk();
- printf("at end clck%d\n",x); 
+ printf("at end clck%d process table size %d\n",x,processTable.size()); 
 
     CPUStatisticsReport.setFinishTime(getClk());
              CPUStatisticsReport.setStarttime(startTime);

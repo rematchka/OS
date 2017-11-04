@@ -47,6 +47,7 @@ class pcb
     this->runtime=runtime;
     this->priority=priority;
     this->remainingTime=runtime;
+    laststopTime=0;
    }
    
    void updatepcb(int newstate,int curtime)
@@ -259,6 +260,7 @@ void my_sigchld_handler(int sig)
         currentprocesscnt--;
         printf("currentprocesscnt from sigchild handler is %d",currentprocesscnt);
         printf("process with pid %d terminated\n",p);
+        //running=false;
         runningprocess.updatepcb(_finished,getClk()); 
         double ta=runningprocess.finishTime-runningprocess.arrivalTime;
         double wta=double(ta)/runningprocess.runtime;
@@ -426,7 +428,7 @@ int main(int argc, char* argv[]) {
        if(schedulerstate==state_last_message_sent)
        {
           if(currentprocesscnt==0) //All procecesses have terminated
-           {
+           {// printf("stuck here\n");
              finished=true; //terminate the scheduler as it has finished
              CPUStatisticsReport.setFinishTime(getClk());
              CPUStatisticsReport.setStarttime(startTime);

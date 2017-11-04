@@ -72,28 +72,40 @@ int main() {
 
            
 	}
-   int idsheduler=fork();
-    if(idsheduler==0)
-		{   if(x==1)//for HPF
-                { execl("./sch.out","./sch.out",  (char*)NULL);
+int idsheduler;
+
+if(x==1)//for HPF
+                {   idsheduler=fork();  if(idsheduler==0){execl("./sch.out","./sch.out",  (char*)NULL);
         	     perror("execl() failure!\n\n");}
-         else if(x==2)
+                  }
+
+
+  else if(x==2)
            {printf("Please enter quantum nunber"); 
              int quant;
-             scanf("%d",&quant);
+             cin>>quant;
+           //  scanf("%d",&quant);
+               idsheduler=fork();
+           if(idsheduler==0){
               stringstream strs;
               strs << quant;
-
-			  string temp_str = strs.str();
+                string temp_str = strs.str();
 	        	char const *pchar = temp_str.c_str();
                    execl("./RR.out","./RR.out",  pchar);
         	     perror("execl() failure!\n\n");
                }
-   else {
+}
+
+else {   idsheduler=fork();
+           if(idsheduler==0){
                       execl("./SRTN2.out","./SRTN2.out");
         	     perror("execl() failure!\n\n");
+}
         }
-		}
+
+   //int idsheduler=fork();
+    
+		
     
 
     // 3-use this function AFTER creating clock process to initialize clock, and initialize MsgQueue
@@ -126,7 +138,7 @@ int main() {
 			Sendmsg(pD);
 			v.erase (v.begin()+i,v.begin()+i+1);
                        // printf("sending data%d\n",pD.id) ;
-                      //  sleep(2);
+                      sleep(1);
 	           }
 			else i++;
 		
@@ -135,7 +147,10 @@ int main() {
 		
 	} 
     //no more processes, send end of transmission message
+    // sleep(10);
     lastSend();
+    kill(idsheduler,SIGILL);
+
     //////////To clear all resources
 int pid,stat_loc;
   pid = wait(&stat_loc);
