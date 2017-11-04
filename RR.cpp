@@ -1,7 +1,7 @@
 #include "clkUtilities.h"
 #include "queueUtilities.h"
 #include <unistd.h>
-//#include <bits/stdc++.h>
+#include <bits/stdc++.h>
 #include <iostream>
 #include <fstream>
 #include <string>
@@ -210,13 +210,10 @@ void my_sigchld_handler(int sig)
      
       current_running.stopTime= getClk();     
        pD=current_running;
-      //do some calculation and printing 
+      //do some calculation and printing  free resources 
       if(p!=0)
       {running_process=false;
-       // current_running.state=3;
-        //current_running.finishTime=getClk();  
-       //printf("child is dead %did %d\n",p,current_running.id);
-      // schedulerLogger.logProcess(current_running,getClk());
+       
         runningprocess.updatepcb(_finished,getClk()); 
         double ta=runningprocess.finishTime-runningprocess.arrivalTime;
         double wta=double(ta)/runningprocess.runtime;
@@ -237,8 +234,7 @@ int startTime=1000;
 void SigIntHandler(int sig)
 {
 
-  //int msg=Recmsg(pD);
- // printf("received a msg form pg %d\n",msg);
+
     startTime=getClk();
     printf("start time %d\n",startTime);
     signal(SIGILL, SIG_IGN);
@@ -270,7 +266,7 @@ int main(int argc, char* argv[]) {
   while(y<=0)
   {  
         int x= getClk();
-        
+        //check fo recieved process
        
        y=Recmsg(pD);
        while(y==0)
@@ -285,18 +281,17 @@ int main(int argc, char* argv[]) {
       }
     
     
-
+// if no running process and there exist process in ready queue run it and check whether its stooped or its new so i will fork it
     if(!running_process&&!processTable.empty())
-      {  // printf("clock %d\n",getClk());
-        //printf("state %d\n",running_process);
+      {  
           runningprocess=processTable.front();
-          //printf("new process runnibg\n");
+          
           processTable.pop(); 
           running_process=true;
             if(runningprocess.state==2)
              {  
                 runningprocess.updatepcb(_resumed,getClk()); //resumed process
-              // kill(runningprocess.pid,SIGCONT); //Send resuming signal
+             
                kill(runningprocess.pid,SIGCONT);
                
    		
@@ -305,7 +300,7 @@ int main(int argc, char* argv[]) {
          else  
              { 
 
-                  // current_running.state=0;
+                  
                     int id=fork();
                     if(id==0)
                         {   stringstream strs;
@@ -321,19 +316,19 @@ int main(int argc, char* argv[]) {
                                     runningprocess.pid=id;
                             runningprocess.updatepcb(_started,getClk()); 
                                    schedulerLogger.logProcess(runningprocess,getClk());                                
-                                     //printf("running child process with id  %d\n",current_running.id);
+                                     
 				}
 		}
       }
-  //printf("here\n");
+  
  if(!running_process)sleep(1);
   if(running_process)
   {    int prevclk=getClk();
            printf("quant %d\n",quant); 
-        //   printf("clock in lseep %d\n",getClk());
+        
 	   sleep(quant);
    int y=getClk();
- 
+                            // when it wake there exist 2 cases interrupted by sigchld on resuming or it finished its quantum so i have to check
           if(running_process&&y==quant+prevclk)
             { 
 	        {   kill(runningprocess.pid,SIGTSTP);
@@ -359,22 +354,22 @@ int main(int argc, char* argv[]) {
     }
  
   
-  //printf("clock %d\n",getClk());
+ 
    }
    
-
+//same algoriyhm above
   while(running_process||!processTable.empty())
     {  int x= getClk();
-       // printf("im in loop with clck%d\n",x);  
+     
         
        
 	if(!running_process)
             {    runningprocess=processTable.front();
-          //printf("new process runnibg\n");
+         
           processTable.pop(); 
           running_process=true;
             if(runningprocess.state==2)
-             {  //kill(runningprocess.pid,SIGCONT);
+             {  
                 runningprocess.updatepcb(_resumed,getClk()); //resumed process
                kill(runningprocess.pid,SIGCONT); //Send resuming signal
                
@@ -396,7 +391,7 @@ int main(int argc, char* argv[]) {
                                     runningprocess.pid=id;
                             runningprocess.updatepcb(_started,getClk()); 
                                    schedulerLogger.logProcess(runningprocess,getClk());                                
-                                     //printf("running child process with id  %d\n",current_running.id);
+                                    
 				}
                     }
 		
@@ -406,7 +401,7 @@ int main(int argc, char* argv[]) {
   {    int prevclk=getClk();
            
 	   sleep(quant);
-   int y=getClk();
+   int y=getClk();// when it wake there exist 2 cases interrupted by sigchld on resuming or it finished its quantum so i have to check
           if(y==quant+prevclk)
             {   if(running_process)
 	        { kill(runningprocess.pid,SIGTSTP); running_process=false; 
@@ -431,7 +426,7 @@ int main(int argc, char* argv[]) {
    
     } 
 
-
+// calculation for cpu utilization
  int x= getClk();
  printf("at end clck%d process table size %d\n",x,(int)processTable.size()); 
 

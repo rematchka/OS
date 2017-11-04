@@ -2,7 +2,7 @@
 #include "queueUtilities.h"
 #include <unistd.h>
 #include <queue>
-//#include <bits/stdc++.h>
+#include <bits/stdc++.h>
 #include <algorithm>
 #include <iostream>
 #include <fstream>
@@ -204,17 +204,11 @@ void my_sigchld_handler(int sig)
 {
     pid_t p;
     int status;
-   // raise(SIGCONT);
-   //kill(getpid(),SIGCONT);
-  //printf("child is dead \n");
+  
     while ((p=waitpid(-1, &status, WNOHANG)) != -1)
     {
-       /* Handle the death of pid p */
+       /* Handle the death of process  free resources and print in log file */
      
-     // current_running.stopTime= getClk();
-     
-     //pD=current_running;
-//do some calculation and printing 
       if(p!=0)
       {running_process=false;
         runningprocess.updatepcb(_finished,getClk()); 
@@ -236,8 +230,7 @@ int startTime=1000;
 void SigIntHandler(int sig)
 {
 
-  //int msg=Recmsg(pD);
- // printf("received a msg form pg %d\n",msg);
+  // i dont care about time of arrival of processes
     startTime=getClk();
     printf("start time %d\n",startTime);
     signal(SIGILL, SIG_IGN);
@@ -252,7 +245,7 @@ int main(int argc, char* argv[]) {
     initClk();
     printf("my PID %d\n",getpid());
    
-
+  //assign signal handler for sig child and sig init
     memset(&sa, 0, sizeof(sa));
     sa.sa_handler = my_sigchld_handler;
 
@@ -261,14 +254,15 @@ int main(int argc, char* argv[]) {
 
     
    
-    
+    /*main loop for recieving and running algorithm first of  if no running process and nothing arrived keep checking*/
 
   
   int y=Recmsg(pD);
   while(y<=0)
   {     int x= getClk();
-     // if(running_process){printf("killing my son id %d\n",current_running.id);kill(current_running.pid,SIGSTOP);}
+    
      y=Recmsg(pD);
+   //there might be many process arrived at same time but have different priorities so i have to store them in ready queue an choose the one with most priority
       while(y==0)
 	{  x= getClk();
 	  printf("current received data %d priority %d\n",pD.id,pD.priority);
@@ -277,17 +271,17 @@ int main(int argc, char* argv[]) {
           chosenprocess.setParameters(pD.id,pD.arrivalTime,pD.runTime,pD.priority);
           processTable.push(chosenprocess);
                
-	 // pq.push(pD);
+	 
           printf("waiting in queue\n");
 	  y=Recmsg(pD);
 
 		
      }
-
+/* if there is no process running but there are process in ready queue get front and run*/
     if(!running_process&&!processTable.empty())
       {    x= getClk();
            runningprocess=processTable.top();
-          //printf("new process runnibg\n");
+          
           processTable.pop(); 
           running_process=true;
             
@@ -311,15 +305,11 @@ int main(int argc, char* argv[]) {
       }
   if(running_process)
      sleep(runningprocess.runtime);
-  //if(running_process)
-  //{ printf("Resuming my son id %d\n",current_running.id);kill(current_running.pid,SIGCONT); }
- //  kill(getpid(),SIGSTOP);
-   // sleep(1);
-   //printf(" clck%d\n",x); 
+  
   
    
    }
-   
+   //small loop where it loop on ready queue that its not empty.
 
   while(!processTable.empty())
     {  int x= getClk();
@@ -345,22 +335,22 @@ int main(int argc, char* argv[]) {
 				  runningprocess.pid=id;
                             runningprocess.updatepcb(_started,getClk()); 
                                    schedulerLogger.logProcess(runningprocess,getClk());
-                                   // printf("running child process with id  %d\n",current_running.id);
+                                   
 				}
 		
             }
-   // kill(getpid(),SIGSTOP);
+   
    if(running_process)
      sleep(runningprocess.runtime);
     
 
     } 
 
-while(running_process) {//kill(getpid(),SIGSTOP);
+while(running_process) {
      int x= getClk();
      int remin=runningprocess.remainingTime-(getClk()-runningprocess.executionStart);
    sleep(remin);}
- //schedulerLogger.close();
+
    int x= getClk();
               CPUStatisticsReport.setFinishTime(getClk());
              CPUStatisticsReport.setStarttime(startTime);
